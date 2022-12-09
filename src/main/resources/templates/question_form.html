@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>질문 하기</title>
+<link rel="stylesheet" type="text/css" th:href="@{/css/bootstrap.min.css}">
+</head>
+<body>
+	
+	<div class="card border-secondary mb-3">
+		<h5 class="card-header">질문하기</h5>
+		<form class="row g-3" th:action="@{/questioncreateOk}">
+			<div class="col-md-6">
+				<label class="form-label">제목</label>
+				<input class="form-control" type="text" name="subject" >
+			</div>
+			<div class="mb-3">
+				<label class="form-label">질문내용</label>
+				<textarea class="form-control" rows="10" name="content"></textarea>
+			</div>
+			<div class="col-12">
+				<input class="btn btn-primary my-2" type="submit" value="저장하기">
+			</div>
+		</form>
+	</div>
+	
+	<!-- 
+	<div class="card border-secondary mb-3">
+		<div class="card-header" th:text="${question.subject}"></div>
+			<div class="card-body">
+			<h5 class="card-title" th:text="${question.content}"></h5>
+			<div class="d-flex justify-content-end">
+				<div class="badge bg-ligth text-dark">
+					<div class="card-text" th:text="${#temporals.format(question.createDate,'yyyy-MM-dd HH:mm')}"></div>
+				</div>
+			</div>
+		</div>
+	</div>
+	 -->
+</body>
+</html>

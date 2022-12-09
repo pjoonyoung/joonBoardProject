@@ -1,6 +1,7 @@
 package com.joonyoung.board.controller;
 
 import java.net.http.HttpRequest;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -74,5 +75,19 @@ public class MainController {
 		answerservice.answerCreate(content, id);
 		
 		return String.format("redirect:/questionView/%s", id);
+	}
+	
+	@RequestMapping(value = "/question_form")
+	public String questioncreate() {
+		
+		return "question_form";
+	}
+	
+	@RequestMapping(value = "/questioncreateOk")
+	public String questioncreateOk(@RequestParam String content, @RequestParam String subject) {
+		
+		questionservice.questionCreate(subject, content);
+		
+		return "redirect:list";
 	}
 }
