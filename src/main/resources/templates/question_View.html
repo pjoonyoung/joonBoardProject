@@ -3,12 +3,40 @@
 <head>
 <meta charset="UTF-8">
 <title>질문 내용 보기</title>
+<link rel="stylesheet" type="text/css" th:href="@{/css/bootstrap.min.css}">
 </head>
 <body>
-	<h2>번호 / 제목 / 질문 내용 / 등록일</h2>
-	<span th:text="${question.id}"></span> / 
-	<span th:text="${question.subject}"></span> / 
-	<span th:text="${question.content}"></span> / 
-	<span th:text="${question.createDate}"></span>
+<div class="container my-3">
+	<!-- 질문 내용 보기 -->
+	<h2 class="border-bottom py-2" th:text="${question.subject}"></h2>
+	<div class="card my-3">
+		<div class="card-body">
+			<div class="card-text" style="white-space:pre-line;" th:text="${question.content}"></div>
+			<div class="d-flex justify-content-end">
+				<div class="badge bg-ligth text-info">
+					<div th:text="${#temporals.format(question.createDate,'yyyy-MM-dd HH:mm')}"></div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- 질문 내용 끝 -->
+	<!-- 답변 개수 출력 -->
+		<h5 class="border-bottom my-3 py-2" th:text="|${#lists.size(question.answerList)}개의 답변이 있습니다.|"></h5>
+	<!-- 답변 개수 출력 끝 -->
+	
+	<!-- 답변 내용 반복 시작 -->
+	<div>
+		<ul>
+			<li th:each="answer:${question.answerList}" th:text="${answer.content}"></li>
+		</ul>
+	</div>
+	<!-- 답변 내용 반복 끝 -->
+	<!-- 답변 내용 작성 -->
+	<form th:action="@{|/answercreate/${question.id}|}" method="get">
+		<textarea rows="10" cols="60" name="content" id="content"></textarea><br>
+		<input type="submit" value="답변등록" id="answer_submit">
+	</form>
+	<!-- 답변 내용 작성 끝 -->
+</div>
 </body>
 </html>
