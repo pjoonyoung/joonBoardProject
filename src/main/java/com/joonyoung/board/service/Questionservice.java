@@ -1,5 +1,6 @@
 package com.joonyoung.board.service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -20,25 +21,46 @@ public class Questionservice {
 	private final QuestionRepository questionRepository;
 	private final AnswerRepository answerRepository;
 	
-	public List<Question> getQuestionList() {
+	List<QuestionDto> questionDtos = new ArrayList<QuestionDto>();
+	
+	public List<QuestionDto> getQuestionList() {
 		
 		List<Question> questionList = questionRepository.findAll();
 
+		for(int i=0;i<questionList.size();i++) {
+	         Question question = questionList.get(i);
+	         
+	         QuestionDto questionDto = new QuestionDto();
+	         
+	         questionDto.setId(question.getId());
+	         questionDto.setContent(question.getContent());
+	         questionDto.setSubject(question.getSubject());
+	         questionDto.setCreateDate(question.getCreateDate());
+	         questionDto.setAnswerList(question.getAnswerList());
+	         
+	         questionDtos.add(questionDto);
+	      }
 		
-		return questionList;
+		return questionDtos;
 		
 	}
 	
-	public Question getQuestion(Integer id) {
+public QuestionDto getQuestion(Integer id) {
 		
 		Optional<Question> optQuestion = questionRepository.findById(id);
+		
+		QuestionDto questionDto = new QuestionDto();
 		if(optQuestion.isPresent()) {
 			Question question = optQuestion.get();
-			return question;
+			questionDto.setId(question.getId());
+			questionDto.setContent(question.getContent());
+			questionDto.setSubject(question.getSubject());
+			questionDto.setAnswerList(question.getAnswerList());
+			questionDto.setCreateDate(question.getCreateDate());
+			return questionDto;
 		} else {
 			throw new DataNotFoundException("해당 질문이 없습니다.");
 		}
-		
 		
 	}
 }
