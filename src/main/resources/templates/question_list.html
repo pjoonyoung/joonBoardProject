@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>질문 답변 게시판</title>
+</head>
+<body>
+	<table border="1" cellspacing="0" cellpadding="0">
+		<tr>
+			<th>번호</th>
+			<th>제목</th>
+			<th>등록일</th>
+		</tr>
+		<tr th:each="question:${questionList}" >
+			<td th:text="${question.id}"></td>
+			<td>
+				<a th:href="@{|/questionView/${question.id}|}" th:text="${question.subject}"></a>
+			</td>
+			<td th:text="${question.createDate}"></td>
+		</tr>
+	</table>
+</body>
+</html>

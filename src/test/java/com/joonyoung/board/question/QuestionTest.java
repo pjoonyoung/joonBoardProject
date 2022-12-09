@@ -53,11 +53,53 @@ public class QuestionTest {
 		Optional<Question> q3 = questionRepository.findById(3);//id가 3번 글 가져오기
 		
 		if(q2.isPresent()) {
-			System.out.println("q2 내용 있음");
+			Question qq = q2.get();
+			assertEquals("질문있습니다.", qq.getSubject());
 		}
 		
-		if(q3.isEmpty()) {
-			System.out.println("q3 내용 없음");
+//		if(q3.isEmpty()) {
+//			System.out.println("q3 내용 없음");
+//		}
+	}
+	
+	@Test
+	@DisplayName("조회테스트3")
+	public void testQuestion3() {
+		
+		List<Question> questionList = questionRepository.findBySubject("질문있습니다.");
+		
+		assertEquals("오늘의 체력은 어떤가요?", questionList.get(0).getContent());
+	}
+	
+	@Test
+	@DisplayName("조회테스트4")
+	public void testQuestion4() {
+		
+		List<Question> questionList = questionRepository.findBySubjectLike("%질문%");
+		
+		assertEquals("오늘의 체력은 어떤가요?", questionList.get(0).getContent());
+	}
+	
+	@Test
+	@DisplayName("수정테스트")
+	public void testQuestion5() {
+		
+		Optional<Question> q1 = questionRepository.findById(1);//id가 1번 글 가져오기
+		if(q1.isPresent()) {
+			Question qq = q1.get();
+			qq.setSubject("스프링질문");
+			questionRepository.save(qq);
+		}
+	}
+	
+	@Test
+	@DisplayName("삭제테스트")
+	public void testQuestion6() {
+		
+		Optional<Question> q1 = questionRepository.findById(1);//id가 1번 글 가져오기
+		if(q1.isPresent()) {
+			Question qq = q1.get();
+			questionRepository.delete(qq);
 		}
 	}
 }
