@@ -55,8 +55,12 @@ public class MainController {
 	}
 	
 	@RequestMapping(value = "/questionView/{id}")
-	public String questionView(@PathVariable("id") Integer id) {
+	public String questionView(Model model, @PathVariable("id") Integer id) {
 		
-		return "question_list";
+		Question question = questionservice.getQuestion(id);
+		
+		model.addAttribute("question", question);
+		
+		return "question_View";
 	}
 }

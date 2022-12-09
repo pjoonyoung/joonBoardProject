@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>질문 내용 보기</title>
+</head>
+<body>
+	<h2>번호 / 제목 / 질문 내용 / 등록일</h2>
+	<span th:text="${question.id}"></span> / 
+	<span th:text="${question.subject}"></span> / 
+	<span th:text="${question.content}"></span> / 
+	<span th:text="${question.createDate}"></span>
+</body>
+</html>
