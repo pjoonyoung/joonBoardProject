@@ -1,12 +1,14 @@
 package com.joonyoung.board.entity;
 
 import java.time.LocalDateTime;
+import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 
 import lombok.AllArgsConstructor;
@@ -33,4 +35,9 @@ public class Answer {
 	
 	@ManyToOne
 	private SiteMember writer;//글쓴이
+	
+	private LocalDateTime ModifyDate;//글 수정일시
+	
+	@ManyToMany//다대다 관계일때 새로운 answer_like 데이블이 생성되고, 필드값은 각 테이블의 기본키가 됨
+	private Set<SiteMember> liker;//좋아요 누른 아이디(중복 방지를 위해 Set 자료구조로 설정)
 }

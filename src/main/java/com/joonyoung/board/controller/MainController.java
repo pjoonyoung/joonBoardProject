@@ -7,6 +7,7 @@ import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -18,11 +19,13 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.server.ResponseStatusException;
 
 import com.joonyoung.board.dto.AnswerForm;
 import com.joonyoung.board.dto.MemberForm;
 import com.joonyoung.board.dto.QuestionDto;
 import com.joonyoung.board.dto.QuestionForm;
+import com.joonyoung.board.entity.Answer;
 import com.joonyoung.board.entity.Question;
 import com.joonyoung.board.entity.SiteMember;
 import com.joonyoung.board.repository.AnswerRepository;
@@ -69,6 +72,8 @@ public class MainController {
 		
 		Page<Question> paging = questionService.getList(page);
 		
+		model.addAttribute("pageCount", paging.getTotalElements());//전체 게시물 개수
+		
 		model.addAttribute("paging", paging);
 		
 		return "question_list";
@@ -88,11 +93,11 @@ public class MainController {
 	@PostMapping(value = "/answerCreate/{id}")
 	public String answerCreate(Model model, @PathVariable("id") Integer id, @Valid AnswerForm answerForm, BindingResult bindingResult, Principal principal) {
 		
-		Question questionDto = questionService.getQuestion(id);
+		Question question = questionService.getQuestion(id);
 		
 		if(bindingResult.hasErrors()) {
 			
-			model.addAttribute("question", questionDto);
+			model.addAttribute("question", question);
 			return "question_View";
 		}
 		
@@ -102,7 +107,7 @@ public class MainController {
 	}
 	
 	@PreAuthorize("isAuthenticated")
-	@RequestMapping(value = "/question_form")
+	@GetMapping(value = "/questionCreate")
 	public String questionCreate(QuestionForm questionForm) {
 				
 		return "question_form";
@@ -148,6 +153,97 @@ public class MainController {
 	@RequestMapping(value = "/login")
 	public String login() {
 		return "login_form";
+	}
+	
+	@PreAuthorize("isAuthenticated")
+	@RequestMapping(value = "/modify/{id}")
+	public String modify(@PathVariable("id") Integer id, QuestionForm questionForm, Principal principal) {
+		
+		Question question = questionService.getQuestion(id);
+		
+		if(!question.getWriter().getUsername().equals(principal.getName())) {
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "수정 권한이 없습니다.");
+		} 
+		
+		questionForm.setSubject(question.getSubject());
+		questionForm.setContent(question.getContent());
+		
+		return "question_form";
+	}
+	
+	@PreAuthorize("isAuthenticated")
+	@PostMapping(value = "/modify/{id}")
+	public String questionModify(@PathVariable("id") Integer id, @Valid QuestionForm questionForm, BindingResult bindingResult, Principal principal) {
+		
+		if(bindingResult.hasErrors()) {
+			return "question_form";
+		}
+		
+		Question question = questionService.getQuestion(id);
+		
+		questionService.modify(questionForm.getSubject(), questionForm.getContent(), question);
+				
+		return String.format("redirect:/questionView/%s", id);
+	}
+	
+	@PreAuthorize("isAuthenticated")
+	@RequestMapping(value = "/delete/{id}")
+	public String delete(@PathVariable("id") Integer id, QuestionForm questionForm, Principal principal) {
+		
+		Question question = questionService.getQuestion(id);
+		
+		if(!question.getWriter().getUsername().equals(principal.getName())) {
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "삭제 권한이 없습니다.");
+		} 
+		
+		questionService.delete(id);
+		
+		return "redirect:/index";
+	}
+	
+	@PreAuthorize("isAuthenticated")
+	@GetMapping(value = "/answermodify/{id}")
+	public String answermodify(@PathVariable("id") Integer id, AnswerForm answerForm, Principal principal) {
+		
+		Answer answer = answerService.getAnswer(id);
+		
+		if(!answer.getWriter().getUsername().equals(principal.getName())) {
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "수정 권한이 없습니다.");
+		} 
+		
+		answerForm.setContent(answer.getContent());
+		
+		return "answer_form";
+	}
+	
+	@PreAuthorize("isAuthenticated")
+	@PostMapping(value = "/answermodify/{id}")
+	public String answerModify(@PathVariable("id") Integer id, @Valid AnswerForm answerForm, BindingResult bindingResult, Principal principal) {
+		
+		if(bindingResult.hasErrors()) {
+			return "answer_form";
+		}
+		
+		Answer answer = answerService.getAnswer(id);
+		
+		answerService.answerModify(answerForm.getContent(), answer);
+				
+		return String.format("redirect:/questionView/%s", answer.getQuestion().getId());
+	}
+	
+	@PreAuthorize("isAuthenticated")
+	@GetMapping(value = "/answerdelete/{id}")
+	public String answerdelete(@PathVariable("id") Integer id, Principal principal) {
+		
+		Answer answer = answerService.getAnswer(id);
+		
+		if(!answer.getWriter().getUsername().equals(principal.getName())) {
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "삭제 권한이 없습니다.");
+		} 
+		
+		answerService.answerDelete(id);
+		
+		return String.format("redirect:/questionView/%s", answer.getQuestion().getId());
 	}
 	
 }

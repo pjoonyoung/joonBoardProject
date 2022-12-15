@@ -99,5 +99,21 @@ public class Questionservice {
 		questionRepository.save(question);
 	}
 	
+	public void modify(String subject, String content, Question question) {
+		
+		question.setSubject(subject);
+		question.setContent(content);
+		question.setModifyDate(LocalDateTime.now());//수정시간을 지금 현재시간으로 셋팅
+		
+		questionRepository.save(question);//새로운 수정
+		
+	}
+	
+	public void delete(Integer id) {
+		
+		questionRepository.deleteById(id);
+		
+	}
+	
 }
 
