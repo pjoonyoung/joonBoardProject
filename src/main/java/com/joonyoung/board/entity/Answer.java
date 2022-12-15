@@ -31,4 +31,6 @@ public class Answer {
 	@ManyToOne//n:1 구조(질문1개에 답변 여러개가 달리는 구조-부모(질문)자식(답변)관계)
 	private Question question;//질문게시판 객체(질문게시판의 id(외래키)를 가져오는 필드가 생성됨)
 	
+	@ManyToOne
+	private SiteMember writer;//글쓴이
 }

@@ -6,50 +6,79 @@
 <link rel="stylesheet" type="text/css" th:href="@{/css/bootstrap.min.css}">
 </head>
 <body>
+	<nav class="navbar navbar-expand-lg navbar-light bg-light border-bottom">
+	  <div class="container-fluid">
+	    <a class="navbar-brand" href="/index">질문-답변 공개게시판</a>	    
+	    <div class="collapse navbar-collapse">
+	    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+	    	<li class="nav-item">
+	    		<a class="nav-link" th:href="@{/login}">로그인</a>
+	    	</li>
+	    	<li class="nav-item">
+	    		<a class="nav-link" th:href="@{/join}">회원가입</a>
+	    	</li>
+	    </ul>
+	    </div>
+	  </div>
+	 </nav> 
 <div class="container my-3">
-	<!-- 질문 내용 보기 -->
-	<!--  
+	<!-- 질문 내용 보기 -->	
+	<!-- 
 	<h2 class="border-bottom py-2" th:text="${question.subject}"></h2>
 	<div class="card my-3">
 		<div class="card-body">
-			<div class="card-text" style="white-space:pre-line;" th:text="${question.content}"></div>
+			<div class="card-text" style="white-space:pre-line;" th:text="${question.content}"></div>			
 			<div class="d-flex justify-content-end">
-				<div class="badge bg-ligth text-info">
+				<div class="badge bg-light text-info">
 					<div th:text="${#temporals.format(question.createDate,'yyyy-MM-dd HH:mm')}"></div>
 				</div>
 			</div>
 		</div>
 	</div>
-	-->
-	<div class="card border-secondary mb-3">
-		<div class="card-header" th:text="${question.subject}"></div>
-			<div class="card-body">
-			<h5 class="card-title" th:text="${question.content}"></h5>
-			<div class="d-flex justify-content-end">
-				<div class="badge bg-ligth text-dark">
-					<div class="card-text" th:text="${#temporals.format(question.createDate,'yyyy-MM-dd HH:mm')}"></div>
-				</div>
+	 -->
+	<div class="card border-info mb-3">
+  	<div class="card-header" th:text="${question.subject}">Header</div>
+  	<div class="card-body">
+    	<h5 class="card-title" th:text="${question.content}">Info card title</h5>
+    	<div class="d-flex justify-content-end">
+			<div class="badge bg-light text-info" th:text="'글쓴이ID : '+ ${question.writer.username}"></div>
+		</div>
+    	<div class="d-flex justify-content-end">
+			<div class="badge bg-light text-info">
+				<div th:text="${#temporals.format(question.createDate,'yyyy-MM-dd HH:mm')}"></div>
 			</div>
 		</div>
-	</div>
+  	</div>
+</div>
 	<!-- 질문 내용 끝 -->
 	<!-- 답변 개수 출력 -->
 		<h5 class="border-bottom my-3 py-2" th:text="|${#lists.size(question.answerList)}개의 답변이 있습니다.|"></h5>
 	<!-- 답변 개수 출력 끝 -->
 	
 	<!-- 답변 내용 반복 시작 -->
-	<div class="card my-3" th:each="answer:${question.answerList}" >
+	<div class="card my-3 p-2" th:each="answer : ${question.answerList}">			
 		<div class="card-text" th:text="${answer.content}"></div>
 		<div class="d-flex justify-content-end">
-			<div class="badge bg-ligth text-dark">
-				<div class="card-text" th:text="${#temporals.format(answer.createTime,'yyyy-MM-dd HH:mm')}"></div>
+			<div class="badge bg-light text-info" th:text="'답변ID : '+ ${answer.writer.username}"></div>
+		</div>
+		<div class="d-flex justify-content-end">
+			<div class="badge bg-light text-info">
+				<div th:text="${#temporals.format(answer.createTime,'yyyy-MM-dd HH:mm')}"></div>
 			</div>
 		</div>
-	</div>
+	</div>		
 	<!-- 답변 내용 반복 끝 -->
 	<!-- 답변 내용 작성 -->
-	<form th:action="@{|/answercreate/${question.id}|}" method="get" class="my-3">
-		<textarea rows="10" cols="60" name="content" id="content" class="form-control"></textarea><br>
+	<!-- 답변 검사 에러 표시 -->
+	<form th:action="@{|/answerCreate/${question.id}|}" method="post" class="my-3" th:object="${answerForm}">
+	<div>
+		<div class="alert alert-danger" th:if="${#fields.hasAnyErrors()}">
+			<div th:each="err:${#fields.allErrors()}" th:text="${err}"></div>
+		</div>
+	</div>	
+	<!-- 답변 검사 에러 표시 끝 -->
+	
+		<textarea rows="10" cols="60" name="content" id="content" class="form-control" th:field="*{content}"></textarea><br>
 		<input type="submit" value="답변등록" id="answer_submit" class="btn btn-primary my-2">
 	</form>
 	<!-- 답변 내용 작성 끝 -->

@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <link rel="stylesheet" type="text/css" th:href="@{/css/bootstrap.min.css}">
-<title>질문하기</title>
+<title>회원 가입</title>
 </head>
 <body>
 	<nav class="navbar navbar-expand-lg navbar-light bg-light border-bottom">
@@ -21,25 +21,30 @@
 	    </div>
 	  </div>
 	 </nav> 
-
-	<div class="container">
-		<h5 class="my-3 border-bottom pb-2">질문하기</h5>
-		<form th:action="@{/questionCreate}" method="post" th:object="${questionForm}">
+	 
+	 <div class="container">
+		<h5 class="my-3 border-bottom pb-2">회원 가입</h5>
+		<form th:action="@{/joinOk}" method="post" th:object="${memberForm}">
 			<div>
 				<div class="alert alert-danger" th:if="${#fields.hasAnyErrors()}">
 					<div th:each="err:${#fields.allErrors()}" th:text="${err}"></div>
 				</div>
 			</div>		
 			<div>
-				<label class="form-label">제목</label>
-				<input type="text" name="subject" class="form-control" th:field="*{subject}">
+				<label class="form-label">사용자ID</label>
+				<input type="text" name="username" class="form-control" th:field="*{username}">
 			</div>
 			<div>
-				<label class="form-label">질문내용</label>
-				<textarea rows="10" name="content" class="form-control" th:field="*{content}"></textarea>
+				<label class="form-label">비밀번호</label>
+				<input type="password" name="password" class="form-control" th:field="*{password}">
 			</div>
-			<input type="submit" value="저장하기" class="btn btn-primary my-2">
+			<div>
+				<label class="form-label">이메일</label>
+				<input type="text" name="email" class="form-control" th:field="*{email}">
+			</div>
+			<input type="submit" value="회원가입" class="btn btn-primary my-2">
 		</form>	
 	</div>	
+
 </body>
 </html>
