@@ -202,7 +202,7 @@ public class MainController {
 	}
 	
 	@PreAuthorize("isAuthenticated")
-	@GetMapping(value = "/answermodify/{id}")
+	@GetMapping(value = "/answerModify/{id}")
 	public String answermodify(@PathVariable("id") Integer id, AnswerForm answerForm, Principal principal) {
 		
 		Answer answer = answerService.getAnswer(id);
@@ -217,7 +217,7 @@ public class MainController {
 	}
 	
 	@PreAuthorize("isAuthenticated")
-	@PostMapping(value = "/answermodify/{id}")
+	@PostMapping(value = "/answerModify/{id}")
 	public String answerModify(@PathVariable("id") Integer id, @Valid AnswerForm answerForm, BindingResult bindingResult, Principal principal) {
 		
 		if(bindingResult.hasErrors()) {
@@ -243,6 +243,28 @@ public class MainController {
 		
 		answerService.answerDelete(id);
 		
+		return String.format("redirect:/questionView/%s", answer.getQuestion().getId());
+	}
+	
+	@PreAuthorize("isAuthenticated")
+	@GetMapping(value = "/questionLike/{id}")
+	public String questionLike(@PathVariable("id") Integer id, Principal principal) {
+		
+		Question question = questionService.getQuestion(id);
+		SiteMember siteMember = memberService.getMemberInfo(principal.getName());
+		
+		questionService.questionLike(question, siteMember);
+		return String.format("redirect:/questionView/%s", id);
+	}
+	
+	@PreAuthorize("isAuthenticated")
+	@GetMapping(value = "/answerLike/{id}")
+	public String answerLike(@PathVariable("id") Integer id, Principal principal) {
+		
+		Answer answer = answerService.getAnswer(id);
+		SiteMember siteMember = memberService.getMemberInfo(principal.getName());
+		
+		answerService.answerLike(answer, siteMember);
 		return String.format("redirect:/questionView/%s", answer.getQuestion().getId());
 	}
 	

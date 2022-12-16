@@ -8,19 +8,20 @@
 <body>
 	<nav class="navbar navbar-expand-lg navbar-light bg-light border-bottom">
 	  <div class="container-fluid">
-	    <a class="navbar-brand" href="/index">질문-답변 공개게시판</a>	    
+	    <a class="navbar-brand" href="/index">질문-답변 공개게시판</a>
 	    <div class="collapse navbar-collapse">
 	    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
 	    	<li class="nav-item">
-	    		<a class="nav-link" th:href="@{/login}">로그인</a>
+	    		<a class="nav-link" sec:authorize="isAnonymous()" th:href="@{/login}" th:text="로그인"></a>	    		
+                <a class="nav-link" sec:authorize="isAuthenticated()" th:href="@{/logout}" th:text="로그아웃"></a>
 	    	</li>
 	    	<li class="nav-item">
-	    		<a class="nav-link" th:href="@{/join}">회원가입</a>
+	    		<a class="nav-link" sec:authorize="isAnonymous()" th:href="@{/join}">회원가입</a>
 	    	</li>
 	    </ul>
 	    </div>
 	  </div>
-	 </nav> 
+ </nav> 
 
 	<div class="container">
 		<h5 class="my-3 border-bottom pb-2">답변 수정</h5>
@@ -30,7 +31,7 @@
 				<div class="alert alert-danger" th:if="${#fields.hasAnyErrors()}">
 					<div th:each="err:${#fields.allErrors()}" th:text="${err}"></div>
 				</div>
-			</div>		
+			</div>	
 			<div>
 				<label class="form-label">답변내용</label>
 				<textarea rows="10" name="content" class="form-control" th:field="*{content}"></textarea>

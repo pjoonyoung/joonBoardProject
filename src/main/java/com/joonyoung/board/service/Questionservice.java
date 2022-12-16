@@ -115,5 +115,11 @@ public class Questionservice {
 		
 	}
 	
+	public void questionLike(Question question, SiteMember siteMember) {
+		question.getLiker().add(siteMember);
+		//현재 질문글이 가지고 있는 좋아요를 누른 회원의 집합을 가져온 후 그 집합에 새로운 좋아요 클릭 회원 객체를 추가
+		questionRepository.save(question);
+	}
+	
 }
 
